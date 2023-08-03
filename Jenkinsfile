@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        TOMCAT_USERNAME = 'csidevops'
+        TOMCAT_PASSWORD = 'Eadevops#1234'
+        TOMCAT_MANAGER_URL = "http://localhost:8081/manager/text"        
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -41,11 +46,43 @@ pipeline {
         }
         stage('Deploy to Tomcat') {
             steps {
-                deploy adapters: [
-                    // Replace 'your-credentials-id' and 'your-tomcat-url' with actual values
-                    tomcat7(credentialsId: 'your-credentials-id', url: 'http://your-tomcat-url:8080')
-                ], contextPath: 'your-app-context-path', war: '**/*.war'
+                script {
+                    // Find the generated war file
+                    def warFile = findFiles(glob: '**/target/*.war').first()
+                    if (!warFile) {
+                        error "No war file found in the target directory."
+                    }
+
+                    // Base64 encode the username and password for basic authentication
+                    def credentials = "${env.TOMCAT_USERNAME}:${env.TOMCAT_PASSWORD}".bytes.encodeBase64().toString()
+
+                    // Build the URL for the deployment
+                    def deployUrl = "${env.TOMCAT_MANAGER_URL}/deploy?path=/myapp&update=true"
+
+                    // Execute the PowerShell script to deploy the war file
+                    def deployCommand = """
+                        powershell -Command "Invoke-WebRequest -Uri '${deployUrl}' -Method PUT -InFile '${warFile}' -Headers @{Authorization='Basic ${credentials}'}"
+                    """
+                    def deployProcess = deployCommand.execute()
+                    deployProcess.waitFor()
+
+                    // Check the exit code of the process to see if the deployment was successful
+                    if (deployProcess.exitValue() == 0) {
+                        println "Deployment successful!"
+                    } else {
+                        println "Deployment failed!"
+                        println "Error message: ${deployProcess.error.text}"
+                        error "Deployment failed!"
+                    }
+                }
             }
+        }
+    }
+
+    post {
+        always {
+            // Clean up the workspace after the build
+            cleanWs()
         }
     }
 }
