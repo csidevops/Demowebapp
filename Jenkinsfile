@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     environment {
+        SONAR_ORGANIZATION = 'csidevops'
         TOMCAT_USERNAME = 'csidevops'
         TOMCAT_PASSWORD = 'Eadevops#1234'
-        TOMCAT_MANAGER_URL = "http://localhost:8081/manager/text"        
+        TOMCAT_MANAGER_URL = "http://localhost:8090/manager/text"        
     }
     stages {
         stage('Checkout') {
@@ -22,7 +23,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 // Run SonarQube Scanner to analyze the code and send results to SonarCloud
-                bat "mvn sonar:sonar -Dsonar.projectKey=DW1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=4b874b261540d629213e98fb8946d784e2ddefb3"
+                bat "mvn sonar:sonar -Dsonar.projectKey=DW1 -Dsonar.organization=${env.SONAR_ORGANIZATION} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=4b874b261540d629213e98fb8946d784e2ddefb3"
             }
         }
         stage('Publish to Artifactory') {
@@ -47,32 +48,34 @@ pipeline {
         stage('Deploy to Tomcat') {
             steps {
                 script {
-                    // Find the generated war file
-                    def warFile = findFiles(glob: '**/target/*.war').first()
-                    if (!warFile) {
-                        error "No war file found in the target directory."
-                    }
+                    // Define the path to the generated war file
+                    def warFilePath = "${env.WORKSPACE}/target/*.war"
+                    
+                    // Check if the war file exists
+                    if (fileExists(warFilePath)) {
+                        // Base64 encode the username and password for basic authentication
+                        def credentials = "${env.TOMCAT_USERNAME}:${env.TOMCAT_PASSWORD}".bytes.encodeBase64().toString()
 
-                    // Base64 encode the username and password for basic authentication
-                    def credentials = "${env.TOMCAT_USERNAME}:${env.TOMCAT_PASSWORD}".bytes.encodeBase64().toString()
+                        // Build the URL for the deployment
+                        def deployUrl = "${env.TOMCAT_MANAGER_URL}/deploy?path=/myapp&update=true"
 
-                    // Build the URL for the deployment
-                    def deployUrl = "${env.TOMCAT_MANAGER_URL}/deploy?path=/myapp&update=true"
+                        // Execute the PowerShell script to deploy the war file
+                        def deployCommand = """
+                            powershell -Command "Invoke-WebRequest -Uri '${deployUrl}' -Method PUT -InFile '${warFilePath}' -Headers @{Authorization='Basic ${credentials}'}"
+                        """
+                        def deployProcess = deployCommand.execute()
+                        deployProcess.waitFor()
 
-                    // Execute the PowerShell script to deploy the war file
-                    def deployCommand = """
-                        powershell -Command "Invoke-WebRequest -Uri '${deployUrl}' -Method PUT -InFile '${warFile}' -Headers @{Authorization='Basic ${credentials}'}"
-                    """
-                    def deployProcess = deployCommand.execute()
-                    deployProcess.waitFor()
-
-                    // Check the exit code of the process to see if the deployment was successful
-                    if (deployProcess.exitValue() == 0) {
-                        println "Deployment successful!"
+                        // Check the exit code of the process to see if the deployment was successful
+                        if (deployProcess.exitValue() == 0) {
+                            println "Deployment successful!"
+                        } else {
+                            println "Deployment failed!"
+                            println "Error message: ${deployProcess.error.text}"
+                            error "Deployment failed!"
+                        }
                     } else {
-                        println "Deployment failed!"
-                        println "Error message: ${deployProcess.error.text}"
-                        error "Deployment failed!"
+                        error "War file not found. Build might have failed."
                     }
                 }
             }
