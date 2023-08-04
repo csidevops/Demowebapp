@@ -48,7 +48,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 bat '''
-                    set WAR_FILE=\target\Demowebapp.war                    
+                    set WAR_FILE=target/Demowebapp.war                    
                     curl -v -T %WAR_FILE% %TOMCAT_URL%/deploy?path=/Demowebapp -u %TOMCAT_USER%:%TOMCAT_PASS%
                 '''
             }
