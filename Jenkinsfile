@@ -23,7 +23,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 // Run SonarQube Scanner to analyze the code and send results to SonarCloud
-                bat "mvn sonar:sonar -Dsonar.projectKey=DW1 -Dsonar.organization=${env.SONAR_ORGANIZATION} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=4b874b261540d629213e98fb8946d784e2ddefb3"
+                bat "mvn sonar:sonar -Dsonar.projectKey=DW2 -Dsonar.organization=${env.SONAR_ORGANIZATION} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=4b874b261540d629213e98fb8946d784e2ddefb3"
             }
         }
         stage('Publish to Artifactory') {
