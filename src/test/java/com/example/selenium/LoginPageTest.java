@@ -5,7 +5,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class HeadlessSeleniumTest {
     public static void main(String[] args) {
         // Set the path to the ChromeDriver executable
-        System.setProperty("webdriver.chrome.driver", "C:\Users\csidevops\ChromeDriver\chromedriver-win64");
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\csidevops\\ChromeDriver\\chromedriver-win64");
 
         // Configure ChromeOptions for headless mode
         ChromeOptions options = new ChromeOptions();
