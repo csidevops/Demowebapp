@@ -1,10 +1,14 @@
 package com.example.selenium;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.junit.Test; // Import the JUnit Test annotation
 
 public class LoginPageTest {
-    public static void main(String[] args) {
+
+    @Test // Mark this method as a test method
+    public void testLoginPage() {
         // Set the path to the ChromeDriver executable
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\csidevops\\ChromeDriver\\chromedriver-win64");
 
