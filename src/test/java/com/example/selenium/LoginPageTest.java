@@ -15,11 +15,11 @@ public class HeadlessSeleniumTest {
         WebDriver driver = new ChromeDriver(options);
 
         // Open the URL
-        driver.get("http://localhost:8080/Demowebapp"); // Replace with your web portal URL
+        driver.get("http://localhost:8080/Demowebapp"); 
 
         // Check if the page title contains a keyword
         String pageTitle = driver.getTitle();
-        if (pageTitle.contains("Demo Web App")) { // Replace "Example" with your keyword
+        if (pageTitle.contains("Demo Web App")) { 
             System.out.println("Test passed: Web portal appeared successfully.");
         } else {
             System.out.println("Test failed: Web portal did not appear as expected.");
