@@ -6,8 +6,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.junit.Test; // Import the JUnit Test annotation
 
 public class LoginPageTest {
-
-    @Test // Mark this method as a test method
+   
     public void testLoginPage() {
         // Set the path to the ChromeDriver executable
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\csidevops\\ChromeDriver\\chromedriver-win64\\chromedriver.exe");
@@ -20,7 +19,7 @@ public class LoginPageTest {
         WebDriver driver = new ChromeDriver(options);
 
         // Open the URL
-        driver.get("http://localhost:8080/Demowebapp"); 
+        driver.get("http://localhost:8090/Demowebapp/"); 
 
         // Check if the page title contains a keyword
         String pageTitle = driver.getTitle();
