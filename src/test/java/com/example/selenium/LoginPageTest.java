@@ -6,7 +6,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.junit.Test; // Import the JUnit Test annotation
 
 public class LoginPageTest {
-   
+    @Test
     public void testLoginPage() {
         // Set the path to the ChromeDriver executable
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\csidevops\\ChromeDriver\\chromedriver-win64\\chromedriver.exe");
