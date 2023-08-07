@@ -1,4 +1,5 @@
-package test.easycodeforall.changeit; 
+package com.example;
+//package test.easycodeforall.changeit; 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.apache.log4j.Logger;
