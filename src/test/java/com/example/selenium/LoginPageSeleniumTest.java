@@ -5,7 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.junit.Test; // Import the JUnit Test annotation
 
-public class LoginPageTest {
+public class LoginPageSeleniumTest {
     @Test
     public void testLoginPage() {
         // Set the path to the ChromeDriver executable
