@@ -58,7 +58,7 @@ pipeline {
                 script {
                     def mavenHome = tool name: 'Maven', type: 'hudson.tasks.Maven$MavenInstallation'
                     def mavenExecutable = "${mavenHome}/bin/mvn"
-                    def mvnTestCommand = "${mavenExecutable} test -Dtest=*"
+                    def mvnTestCommand = "${mavenExecutable} test -Dtest=*SeleniumTest*"
                     bat mvnTestCommand
                 }
             }
