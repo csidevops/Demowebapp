@@ -45,7 +45,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
+        stage('Deploy to QA') {
             steps {
                 bat '''
                     set WAR_FILE=target/Demowebapp.war                    
@@ -55,7 +55,12 @@ pipeline {
         }
         stage('Functional Testing') {
             steps {
-                bat 'mvnw test -Dtest=com.example.selenium.*'
+                script {
+                    def mavenHome = tool name: 'Maven', type: 'hudson.tasks.Maven$MavenInstallation'
+                    def mavenExecutable = "${mavenHome}/bin/mvn"
+                    def mvnTestCommand = "${mavenExecutable} test -Dtest=*"
+                    bat mvnTestCommand
+                }
             }
         }
     }
