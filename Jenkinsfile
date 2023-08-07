@@ -53,6 +53,11 @@ pipeline {
                 '''
             }
         }
+        stage('Functional Testing') {
+            steps {
+                bat 'mvnw test -Dtest=com.example.selenium.*'
+            }
+        }
     }
 
     post {
