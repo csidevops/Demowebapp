@@ -55,7 +55,7 @@
             <connectTime>true</connectTime>
           </value>
         </objProp>
-        <stringProp name="filename">test_results.jtl</stringProp>
+        <stringProp name="filename">JmeterResult.jtl</stringProp>
         <boolProp name="ResultCollector.success_only_logging">true</boolProp>
       </ResultCollector>
       <hashTree/>
