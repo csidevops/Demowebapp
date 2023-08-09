@@ -65,8 +65,8 @@ pipeline {
         }
         stage('Performance Testing') {
             steps {
-                bat 'jmeter -n -t ${WORKSPACE}\\project_name\\src\\test\\java\\com\\example\\jmeter\\*.jmx -l ${WORKSPACE}\\project_name\\JmeterResult.jtl'
-                perfReport '${WORKSPACE}\\project_name\\JmeterResult.jtl'
+                bat 'jmeter -n -t ${WORKSPACE}\\Demowebapp\\src\\test\\java\\com\\example\\jmeter\\*.jmx -l ${WORKSPACE}\\Demowebapp\\JmeterResult.jtl'
+                perfReport '${WORKSPACE}\\Demowebapp\\JmeterResult.jtl'
             }
         }
     }
