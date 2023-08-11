@@ -68,6 +68,7 @@ pipeline {
                 bat "jmeter -n -t ${WORKSPACE}/src/test/java/com/example/jmeter/*.jmx -l ${WORKSPACE}/target/jmeter-result/JmeterResult.jtl"                
             }
         }
+
     }
 
     post {
