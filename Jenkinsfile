@@ -68,7 +68,30 @@ pipeline {
                 bat "jmeter -n -t ${WORKSPACE}/src/test/java/com/example/jmeter/*.jmx -l ${WORKSPACE}/target/jmeter-result/JmeterResult.jtl"                
             }
         }
+       stage('Deploy to Prod') {
+            steps {
+                script {
+                    def approval = input(
+                        message: 'Approve deployment to production?',
+                        ok: 'Deploy to Production',
+                        submitter: 'csidevops'
+                        parameters: [
+                            booleanParam(defaultValue: false, description: 'Deploy to production?', name: 'DEPLOY_TO_PROD')
+                        ]
+                    )
 
+                    if (approval == true) {                        
+                       bat '''
+                           set WAR_FILE=target/Demowebapp.war                    
+                           curl -v -T %WAR_FILE% %TOMCAT_URL%/deploy?path=/Demowebapp -u %TOMCAT_USER%:%TOMCAT_PASS%
+                       '''
+                    } else {
+                        error('Deployment to production not approved.')
+                    }
+                }
+            }
+        }
+        
     }
 
     post {
