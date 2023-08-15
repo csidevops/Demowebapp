@@ -74,7 +74,7 @@ pipeline {
                     def approval = input(
                         message: 'Approve deployment to production?',
                         ok: 'Deploy to Production',
-                        submitter: 'csidevops'
+                        submitter: 'csidevops',
                         parameters: [
                             booleanParam(defaultValue: false, description: 'Deploy to production?', name: 'DEPLOY_TO_PROD')
                         ]
